@@ -2,9 +2,9 @@
 // this will check if we have a user and set signout link if it exists
 import '../auth/user.js';
 // > Part B: import pet fetch
+import { getPet } from '../fetch-utils.js';
 // > Part C: import create comment
 import { renderComment } from '../render-utils.js';
-
 /* Get DOM Elements */
 const errorDisplay = document.getElementById('error-display');
 const petName = document.getElementById('pet-name');
@@ -27,6 +27,23 @@ window.addEventListener('load', async () => {
     //  - of no pet, redirect to list (home) page
     //  - otherwise, display pet
     // > Part C: also call display comments in addition to display pet
+    const searchPerams = new URLSearchParams(location.search);
+    const id = searchPerams.get('id');
+
+    if (error) {
+        location.replace('/');
+        return;
+    }
+
+    const response = await getPet(id);
+    error = response.error;
+    pet = response.data;
+
+    if (error) {
+        displayError();
+    } else {
+        displayPet();
+    }
 });
 
 addCommentForm.addEventListener('submit', async (e) => {
@@ -54,6 +71,10 @@ function displayError() {
 
 function displayPet() {
     // > Part B: display the pet info
+    petName.textContent = pet.name;
+    petBio.textContent = pet.bio;
+    petImage.src = pet.image_url;
+    petImage.alt = `${pet.name} image`;
 }
 
 function displayComments() {
