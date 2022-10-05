@@ -3,6 +3,7 @@
 import '../auth/user.js';
 // > Part B: import pet fetch
 import { getPet } from '../fetch-utils.js';
+import { createComment } from '../fetch-utils.js';
 // > Part C: import create comment
 import { renderComment } from '../render-utils.js';
 /* Get DOM Elements */
@@ -43,6 +44,7 @@ window.addEventListener('load', async () => {
         displayError();
     } else {
         displayPet();
+        displayComments();
     }
 });
 
@@ -55,6 +57,23 @@ addCommentForm.addEventListener('submit', async (e) => {
     //    - store and check for an error and display it, otherwise
     //    - add the new comment (data) to the front of the pet comments using unshift
     //    - reset the form
+    const formData = new FormData(addCommentForm);
+    const insertComment = {
+        text: formData.get('text'),
+        pet_id: pet.id,
+    };
+
+    const response = await createComment(insertComment);
+    error = response.error;
+
+    if (error) {
+        displayError();
+    } else {
+        const comment = response.data;
+        pet.comments.unshift(comment);
+        displayComments();
+        addCommentForm.reset();
+    }
 });
 
 /* Display Functions */
@@ -82,5 +101,7 @@ function displayComments() {
 
     for (const comment of pet.comments) {
         // > Part C: render the comments
+        const commentEl = renderComment(comment, pet.id);
+        commentList.append(commentEl);
     }
 }
