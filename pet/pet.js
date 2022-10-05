@@ -30,7 +30,7 @@ window.addEventListener('load', async () => {
     const searchPerams = new URLSearchParams(location.search);
     const id = searchPerams.get('id');
 
-    if (error) {
+    if (!id) {
         location.replace('/');
         return;
     }
