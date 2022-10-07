@@ -28,8 +28,8 @@ window.addEventListener('load', async () => {
     //  - of no pet, redirect to list (home) page
     //  - otherwise, display pet
     // > Part C: also call display comments in addition to display pet
-    const searchPerams = new URLSearchParams(location.search);
-    const id = searchPerams.get('id');
+    const searchParams = new URLSearchParams(location.search);
+    const id = searchParams.get('id');
 
     if (!id) {
         location.replace('/');
@@ -41,7 +41,7 @@ window.addEventListener('load', async () => {
     pet = response.data;
 
     if (error) {
-        displayError();
+        location.replace('/');
     } else {
         displayPet();
         displayComments();
